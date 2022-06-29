@@ -38,7 +38,7 @@ export class ProductsController {
   @ApiOperation({
     summary: 'Ver um produto',
   })
-  findOne(@Param('id') id: string): Promise<Product[]> {
+  findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
   }
 

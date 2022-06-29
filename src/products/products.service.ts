@@ -8,8 +8,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export class ProductsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateProductDto) {
-    return 'This action adds a new product';
+  create(dto: CreateProductDto): Promise<Product> {
+    return this.prisma.product.create({ data: dto });
   }
 
   findAll(): Promise<Product[]> {
@@ -17,7 +17,7 @@ export class ProductsService {
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} product`;
+    return this.prisma.product.findUnique({ where: { id } });
   }
 
   update(id: string, dto: UpdateProductDto) {
