@@ -11,6 +11,7 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Product } from './entities/product.entity';
 
 @ApiTags('products')
 @Controller('products')
@@ -29,7 +30,7 @@ export class ProductsController {
   @ApiOperation({
     summary: 'Ver todos os produtos',
   })
-  findAll() {
+  findAll(): Promise<Product[]> {
     return this.productsService.findAll();
   }
 
@@ -37,7 +38,7 @@ export class ProductsController {
   @ApiOperation({
     summary: 'Ver um produto',
   })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<Product[]> {
     return this.productsService.findOne(id);
   }
 
