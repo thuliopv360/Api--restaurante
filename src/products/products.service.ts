@@ -16,12 +16,12 @@ export class ProductsService {
     return this.prisma.product.findMany();
   }
 
-  findOne(id: string) {
+  findOne(id: string): Promise<Product> {
     return this.prisma.product.findUnique({ where: { id } });
   }
 
-  update(id: string, dto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  update(id: string, dto: UpdateProductDto): Promise<Product> {
+    return this.prisma.product.update({ where: { id }, data: dto });
   }
 
   remove(id: string) {
