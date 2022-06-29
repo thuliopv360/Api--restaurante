@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Matches,
+  MinLength,
+} from 'class-validator';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -16,7 +23,14 @@ export class CreateUserDto {
   })
   email: string;
 
-  @Matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/)
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+    message: 'Senha muito fraca',
+  })
+  @MinLength(6)
+  @ApiProperty({
+    example: '@Abc123',
+    description: 'Deveria ter no minimo 1 simbolo 1 letra maiuscula e 1 numero',
+  })
   @IsString()
   @IsNotEmpty()
   password: string;
@@ -33,7 +47,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   cities: string;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   cep: number;
 
@@ -45,7 +59,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   street: string;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   number: number;
 }

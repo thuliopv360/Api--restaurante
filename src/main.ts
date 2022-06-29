@@ -12,7 +12,9 @@ async function bootstrap() {
     .setTitle('Restaurantes')
     .setDescription('Aplicação para gestão de entregas de um restaurante')
     .setVersion('1.0.0')
+    .addTag('status')
     .addTag('users')
+    .addTag('products')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -10,6 +10,6 @@ export class User {
   district: string; // Bairro do usuario
   street: string; // Rua do usuario
   number: number; // Numero do usuario
-  created_at: Date; // Criaçao do usuario
-  updated_at: Date; // Atualizaçao  bn  do usuario
+  createdAt: Date; // Criaçao do usuario
+  updatedAt: Date; // Atualizaçao  bn  do usuario
 }
