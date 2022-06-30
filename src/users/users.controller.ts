@@ -18,22 +18,6 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  @ApiOperation({
-    summary: 'Lista todos os usuários',
-  })
-  getAll(): Promise<User[]> {
-    return this.usersService.getAll();
-  }
-
-  @Get(':id')
-  @ApiOperation({
-    summary: 'Lista Usuario por id',
-  })
-  getById(@Param('id') id: string): Promise<User> {
-    return this.usersService.getById(id);
-  }
-
   @Post()
   @ApiOperation({
     summary: 'Cria um novo usuario',
@@ -41,13 +25,28 @@ export class UsersController {
   create(@Body() dto: CreateUserDto): Promise<User> {
     return this.usersService.create(dto);
   }
+  @Get()
+  @ApiOperation({
+    summary: 'Lista todos os usuários',
+  })
+  findAll(): Promise<User[]> {
+    return this.usersService.findAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Lista Usuario por id',
+  })
+  findOne(@Param('id') id: string): Promise<User> {
+    return this.usersService.getById(id);
+  }
 
   @Delete(':id')
   @ApiOperation({
     summary: 'Deletar um usuario',
   })
-  delete(@Param('id') id: string) {
-    return this.usersService.delete(id);
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(id);
   }
 
   @Patch(':id')
