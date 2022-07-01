@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Table } from './entities/table.entity';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TableService } from './table.service';
 import { CreateTableDto } from './dto/create-table.dto';
 import { UpdateTableDto } from './dto/update-table.dto';
@@ -8,8 +17,8 @@ export class TableController {
   constructor(private readonly tableService: TableService) {}
 
   @Post()
-  create(@Body() createTableDto: CreateTableDto) {
-    return this.tableService.create(createTableDto);
+  create(@Body() dto: CreateTableDto): Promise<Table> {
+    return this.tableService.create(dto);
   }
 
   @Get()
@@ -19,16 +28,16 @@ export class TableController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.tableService.findOne(+id);
+    return this.tableService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTableDto: UpdateTableDto) {
-    return this.tableService.update(+id, updateTableDto);
+  update(@Param('id') id: string, @Body() dto: UpdateTableDto) {
+    return this.tableService.update(id, dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.tableService.remove(+id);
+    return this.tableService.remove(id);
   }
 }

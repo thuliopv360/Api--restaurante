@@ -1,29 +1,54 @@
 import { Table } from './entities/table.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateTableDto } from './dto/create-table.dto';
 import { UpdateTableDto } from './dto/update-table.dto';
 
 @Injectable()
 export class TableService {
   constructor(private readonly prisma: PrismaService) {}
-  create(dto: CreateTableDto){
-    return 'This action adds a new table';
+  create(dto: CreateTableDto): Promise<Table> {
+    return this.prisma.table.create({ data: dto });
   }
 
-  findAll() {
-    return `This action returns all table`;
+  findAll(): Promise<Table[]> {
+    return this.prisma.table.findMany();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} table`;
+  async verifyIdAndReturnTable(id: string): Promise<Table> {
+    const table: Table = await this.prisma.table.findUnique({
+      where: { id },
+    });
+
+    if (table === null) {
+      throw new NotFoundException(`Entrada de id ${id} nao encontrada`);
+    }
+    return table;
   }
 
-  update(id: string, updateTableDto: UpdateTableDto) {
-    return `This action updates a #${id} table`;
+  handleError(error: Error) {
+    const splitedMessage = error.message.split('`');
+
+    const errorMessage = `Entrada '${
+      splitedMessage[splitedMessage.length - 2]
+    }' nao esta respeitando a constraint UNIQUE`;
+
+    throw new UnprocessableEntityException(errorMessage);
+  }
+
+  findOne(id: string): Promise<Table> {
+    return this.prisma.table.findUnique({ where: { id } });
+  }
+
+  update(id: string, dto: UpdateTableDto): Promise<Table> {
+    return this.prisma.table.update({ where: { id }, data: dto });
   }
 
   remove(id: string) {
-    return `This action removes a #${id} table`;
+    return this.prisma.table.delete({ where: { id } });
   }
 }
