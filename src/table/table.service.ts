@@ -11,8 +11,8 @@ import { UpdateTableDto } from './dto/update-table.dto';
 @Injectable()
 export class TableService {
   constructor(private readonly prisma: PrismaService) {}
-  create(dto: CreateTableDto): Promise<Table> {
-    return this.prisma.table.create({ data: dto });
+  async create(dto: CreateTableDto): Promise<Table> {
+    return this.prisma.table.create({ data: dto }).catch(this.handleError);
   }
 
   findAll(): Promise<Table[]> {
@@ -24,13 +24,13 @@ export class TableService {
       where: { id },
     });
 
-    if (table === null) {
+    if (!table) {
       throw new NotFoundException(`Entrada de id ${id} nao encontrada`);
     }
     return table;
   }
 
-  handleError(error: Error) {
+  handleError(error: Error): never {
     const splitedMessage = error.message.split('`');
 
     const errorMessage = `Entrada '${
@@ -41,14 +41,23 @@ export class TableService {
   }
 
   findOne(id: string): Promise<Table> {
-    return this.prisma.table.findUnique({ where: { id } });
+    return this.verifyIdAndReturnTable(id);
   }
 
-  update(id: string, dto: UpdateTableDto): Promise<Table> {
-    return this.prisma.table.update({ where: { id }, data: dto });
+  async update(id: string, dto: UpdateTableDto): Promise<Table> {
+    await this.verifyIdAndReturnTable(id);
+
+    return this.prisma.table
+      .update({ where: { id }, data: dto })
+      .catch(this.handleError);
   }
 
-  remove(id: string) {
-    return this.prisma.table.delete({ where: { id } });
+  async remove(id: string) {
+    await this.verifyIdAndReturnTable(id);
+
+    return this.prisma.table.delete({
+      where: { id },
+      select: { number: true, id: true },
+    });
   }
 }
