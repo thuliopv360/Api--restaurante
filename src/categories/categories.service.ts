@@ -1,5 +1,5 @@
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
@@ -13,6 +13,17 @@ export class CategoriesService {
 
   findAll(): Promise<Category[]> {
     return this.prisma.category.findMany();
+  }
+
+  async verifyIdAndReturnCategory(id: string): Promise<Category> {
+    const category: Category = await this.prisma.category.findUnique({
+      where: { id },
+    });
+
+    if (category === null) {
+      throw new NotFoundException(`Entrada de id ${id} nao encontrada`);
+    }
+    return category;
   }
 
   findOne(id: string): Promise<Category> {
