@@ -1,10 +1,7 @@
+import { handleErrorConstraintUnique } from './../utils/handle-error-unique.util';
 import { Table } from './entities/table.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTableDto } from './dto/create-table.dto';
 import { UpdateTableDto } from './dto/update-table.dto';
 
@@ -12,7 +9,9 @@ import { UpdateTableDto } from './dto/update-table.dto';
 export class TableService {
   constructor(private readonly prisma: PrismaService) {}
   async create(dto: CreateTableDto): Promise<Table> {
-    return this.prisma.table.create({ data: dto }).catch(this.handleError);
+    return this.prisma.table
+      .create({ data: dto })
+      .catch(handleErrorConstraintUnique);
   }
 
   findAll(): Promise<Table[]> {
@@ -30,16 +29,6 @@ export class TableService {
     return table;
   }
 
-  handleError(error: Error): never {
-    const splitedMessage = error.message.split('`');
-
-    const errorMessage = `Entrada '${
-      splitedMessage[splitedMessage.length - 2]
-    }' nao esta respeitando a constraint UNIQUE`;
-
-    throw new UnprocessableEntityException(errorMessage);
-  }
-
   findOne(id: string): Promise<Table> {
     return this.verifyIdAndReturnTable(id);
   }
@@ -49,7 +38,7 @@ export class TableService {
 
     return this.prisma.table
       .update({ where: { id }, data: dto })
-      .catch(this.handleError);
+      .catch(handleErrorConstraintUnique);
   }
 
   async remove(id: string) {

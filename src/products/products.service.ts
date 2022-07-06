@@ -1,3 +1,4 @@
+import { handleErrorConstraintUnique } from './../utils/handle-error-unique.util';
 import { Product } from './entities/product.entity';
 import { PrismaService } from './../prisma/prisma.service';
 import {
@@ -13,11 +14,13 @@ export class ProductsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateProductDto): Promise<Product | void> {
-    return this.prisma.product.create({ data: dto }).catch(this.handleError);
+    return this.prisma.product
+      .create({ data: dto })
+      .catch(handleErrorConstraintUnique);
   }
 
   findAll(): Promise<Product[]> {
-    return this.prisma.product.findMany();
+    return this.prisma.product.findMany({ include: { category: true } });
   }
 
   async verifyIdAndReturnProduct(id: string): Promise<Product> {
@@ -50,7 +53,7 @@ export class ProductsService {
 
     return this.prisma.product
       .update({ where: { id }, data: dto })
-      .catch(this.handleError);
+      .catch(handleErrorConstraintUnique);
   }
 
   async remove(id: string) {
