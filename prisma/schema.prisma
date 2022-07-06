@@ -25,6 +25,8 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  products Product[]// relacionameto de muitos para muitos
+
   @@map("user")
 }
 
@@ -38,8 +40,10 @@ model Product {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  category Category @relation(fields: [categoryId], references: [id])
-  categoryId String @map("category_id")
+  category Category @relation(fields: [categoryId], references: [id])//relacionamento muitos para um
+  categoryId String @map("category_id") //relacionamento muitos para um
+
+  users User[]// relacionameto de muitos para muitos
 
   @@map("products")
 }
@@ -57,7 +61,7 @@ model Category {
   id String @id @default(uuid())
   name String @unique
 
-  products Product[]
+  products Product[] // relacionamento um para muitos
 
   @@map("category")
 }
