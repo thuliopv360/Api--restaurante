@@ -1,3 +1,4 @@
+import { FavoriteProductDto } from './dto/favorite-product.dto';
 import { handleErrorConstraintUnique } from './../utils/handle-error-unique.util';
 import { Product } from './entities/product.entity';
 import { PrismaService } from './../prisma/prisma.service';
@@ -60,5 +61,9 @@ export class ProductsService {
     await this.verifyIdAndReturnProduct(id);
 
     return this.prisma.product.delete({ where: { id } });
+  }
+
+  favorite(dto: FavoriteProductDto) {
+    return this.prisma.favorite.create({ data: dto });
   }
 }

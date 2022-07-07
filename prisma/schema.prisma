@@ -11,46 +11,46 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  password String
-  country String
-  state String
-  cities String
-  cep Int
-  district String
-  street String
-  number Int
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  country   String
+  state     String
+  cities    String
+  cep       Int
+  district  String
+  street    String
+  number    Int
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  products Product[]// relacionameto de muitos para muitos
+  favorites Favorite[] // relacionameto de muitos para muitos
 
   @@map("user")
 }
 
 model Product {
-  id String @id @default(uuid())
-  name String @unique
+  id          String   @id @default(uuid())
+  name        String   @unique
   description String
-  ingredient String
-  price Float
-  image String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  ingredient  String
+  price       Float
+  image       String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  category Category @relation(fields: [categoryId], references: [id])//relacionamento muitos para um
-  categoryId String @map("category_id") //relacionamento muitos para um
+  category   Category @relation(fields: [categoryId], references: [id]) //relacionamento muitos para um
+  categoryId String   @map("category_id") //relacionamento muitos para um
 
-  users User[]// relacionameto de muitos para muitos
+  favorites Favorite[] // relacionameto de muitos para muitos
 
   @@map("products")
 }
 
-model Table{
-  id String @id @default(uuid())
-  number Int @unique
+model Table {
+  id        String   @id @default(uuid())
+  number    Int      @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -64,4 +64,18 @@ model Category {
   products Product[] // relacionamento um para muitos
 
   @@map("category")
+}
+
+model Favorite {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  product Product @relation(fields: [productName], references: [name])
+  productName String @map("product_name")
+
+  @@map("favorite")
+  @@unique([userId, productName])
 }

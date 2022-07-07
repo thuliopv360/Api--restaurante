@@ -1,3 +1,4 @@
+import { FavoriteProductDto } from './dto/favorite-product.dto';
 import {
   Controller,
   Get,
@@ -56,5 +57,13 @@ export class ProductsController {
   })
   remove(@Param('id') id: string) {
     return this.productsService.remove(id);
+  }
+
+  @Post('favorite')
+  @ApiOperation({
+    summary: 'Favoritar produto',
+  })
+  favorite(@Body() dto: FavoriteProductDto) {
+    return this.productsService.favorite(dto);
   }
 }
