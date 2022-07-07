@@ -80,7 +80,7 @@ export class ProductsController {
   @ApiOperation({
     summary: 'Desfavoritar produto',
   })
-  disfavoring(@Param('id') id: string) {
-    return this.productsService.disfavoring(id);
+  dislike(@Param('id') id: string) {
+    return this.productsService.dislike(id);
   }
 }

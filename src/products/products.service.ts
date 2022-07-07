@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { User } from 'src/users/entity/users.entity';
 
 @Injectable()
 export class ProductsService {
@@ -29,7 +30,7 @@ export class ProductsService {
       where: { id },
     });
 
-    if (product === null) {
+    if (!product) {
       throw new NotFoundException(`Entrada de id ${id} nao encontrada`);
     }
     return product;
@@ -49,6 +50,20 @@ export class ProductsService {
     return this.verifyIdAndReturnProduct(id);
   }
 
+  async findUsersLiked(id: string) {
+    const product: Product = await this.prisma.product.findUnique({
+      where: { id },
+    });
+
+    return this.prisma.favorite.findMany({
+      where: { productName: product.name },
+      select: {
+        productName: true,
+        user: { select: { id: true, email: true } },
+      },
+    });
+  }
+
   async update(id: string, dto: UpdateProductDto): Promise<Product | void> {
     await this.verifyIdAndReturnProduct(id);
 
@@ -63,24 +78,32 @@ export class ProductsService {
     return this.prisma.product.delete({ where: { id } });
   }
 
-  favorite(dto: FavoriteProductDto) {
+  async favorite(dto: FavoriteProductDto) {
+    const product: Product = await this.prisma.product.findUnique({
+      where: { name: dto.productName },
+    });
+
+    if (!product) {
+      throw new NotFoundException(
+        `Produto de nome '${dto.productName}' não encontrado`,
+      );
+    }
+
+    const user: User = await this.prisma.user.findUnique({
+      where: { id: dto.userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `Entrada de id '${dto.userId}' não encontrada`,
+      );
+    }
     return this.prisma.favorite.create({ data: dto });
   }
 
-  disfavoring(id: string) {
+  async dislike(id: string) {
+    await this.verifyIdAndReturnProduct(id);
+
     return this.prisma.favorite.delete({ where: { id } });
-  }
-
-  async findUsersLiked(id: string) {
-    const product: Product = await this.prisma.product.findUnique({
-      where: { id },
-    });
-
-    return this.prisma.favorite.findMany({
-      where: { productName: product.name },
-      select: {
-        productName: true,
-      },
-    });
   }
 }
