@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-users.dto';
 import { User } from './entity/users.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
+import { Favorite } from 'src/favorites/entities/favorite.entity';
 
 @Injectable()
 export class UsersService {
@@ -63,6 +64,13 @@ export class UsersService {
 
   findOne(id: string) {
     return this.verifyIdAndReturnUser(id);
+  }
+
+  findFavoriteProducts(id: string): Promise<Favorite[]> {
+    return this.prisma.favorite.findMany({
+      where: { userId: id },
+      select: { productName: true, userId: false, createdAt: false },
+    });
   }
 
   async update(id: string, dto: UpdateUserDto): Promise<User | void> {

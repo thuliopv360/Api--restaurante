@@ -1,6 +1,6 @@
 export class Favorite {
-  is: string;
-  userId: string;
+  id?: string;
+  userId?: string;
+  createdAt?: Date;
   productName: string;
-  createdAt: Date;
 }
