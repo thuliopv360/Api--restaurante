@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-users.dto';
 import { User } from './entity/users.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
+import { Favorite } from 'src/favorites/entities/favorite.entity';
 
 @Injectable()
 export class UsersService {
@@ -46,13 +47,23 @@ export class UsersService {
   }
 
   findAll(): Promise<User[]> {
-    return this.prisma.user.findMany({ select: this.userSelect });
+    return this.prisma.user.findMany({
+      select: {
+        ...this.userSelect,
+        favorites: true,
+        // include: { favorites: true }, nao da pra usar os dois juntos
+      },
+    });
   }
 
   async verifyIdAndReturnUser(id: string): Promise<User> {
     const user: User = await this.prisma.user.findUnique({
       where: { id },
-      select: this.userSelect,
+      select: {
+        ...this.userSelect,
+        favorites: true,
+        // include: { favorites: true }, nao da pra usar os dois juntos
+      },
     });
 
     if (user === null) {
@@ -65,6 +76,14 @@ export class UsersService {
     return this.verifyIdAndReturnUser(id);
   }
 
+  async findFavoriteProducts(id: string): Promise<Favorite[]> {
+    await this.verifyIdAndReturnUser(id);
+
+    return this.prisma.favorite.findMany({
+      where: { userId: id },
+    });
+  }
+
   async update(id: string, dto: UpdateUserDto): Promise<User | void> {
     await this.verifyIdAndReturnUser(id);
 
@@ -75,6 +94,7 @@ export class UsersService {
 
   async remove(id: string) {
     await this.verifyIdAndReturnUser(id);
+
     return this.prisma.user.delete({
       where: { id },
       select: this.userSelect,
