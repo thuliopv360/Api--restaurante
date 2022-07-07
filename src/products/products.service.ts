@@ -1,4 +1,4 @@
-import { FavoriteProductDto } from './dto/favorite-product.dto';
+import { FavoriteProductDto } from '../favorites/dto/favorite-product.dto';
 import { handleErrorConstraintUnique } from './../utils/handle-error-unique.util';
 import { Product } from './entities/product.entity';
 import { PrismaService } from './../prisma/prisma.service';
@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Favorite } from 'src/favorites/entities/favorite.entity';
 
 @Injectable()
 export class ProductsService {
@@ -65,5 +66,9 @@ export class ProductsService {
 
   favorite(dto: FavoriteProductDto) {
     return this.prisma.favorite.create({ data: dto });
+  }
+
+  disfavoring(id: string) {
+    return this.prisma.favorite.delete({ where: { id } });
   }
 }
