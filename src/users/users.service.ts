@@ -47,13 +47,23 @@ export class UsersService {
   }
 
   findAll(): Promise<User[]> {
-    return this.prisma.user.findMany({ select: this.userSelect });
+    return this.prisma.user.findMany({
+      select: {
+        ...this.userSelect,
+        favorites: true,
+        // include: { favorites: true }, nao da pra usar os dois juntos
+      },
+    });
   }
 
   async verifyIdAndReturnUser(id: string): Promise<User> {
     const user: User = await this.prisma.user.findUnique({
       where: { id },
-      select: this.userSelect,
+      select: {
+        ...this.userSelect,
+        favorites: true,
+        // include: { favorites: true }, nao da pra usar os dois juntos
+      },
     });
 
     if (user === null) {

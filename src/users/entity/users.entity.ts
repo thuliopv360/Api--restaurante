@@ -1,3 +1,5 @@
+import { Favorite } from 'src/favorites/entities/favorite.entity';
+
 export class User {
   id: string;
   name: string;
@@ -12,4 +14,5 @@ export class User {
   number: number; // Numero do usuario
   createdAt: Date; // Criaçao do usuario
   updatedAt: Date; // Atualizaçao  bn  do usuario
+  favorites?: Favorite[];
 }

@@ -13,7 +13,6 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Product } from './entities/product.entity';
-import { Favorite } from 'src/favorites/entities/favorite.entity';
 
 @ApiTags('products')
 @Controller('products')
@@ -42,6 +41,15 @@ export class ProductsController {
   })
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
+  }
+
+  @Get(':id/users-liked')
+  @ApiOperation({
+    summary:
+      'Trazer a lista de usuarios que tem o produto do id enviado como favorito',
+  })
+  findUsersLiked(@Param('id') id: string) {
+    return this.productsService.findUsersLiked(id);
   }
 
   @Patch(':id')

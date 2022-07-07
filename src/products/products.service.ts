@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Favorite } from 'src/favorites/entities/favorite.entity';
 
 @Injectable()
 export class ProductsService {
@@ -70,5 +69,18 @@ export class ProductsService {
 
   disfavoring(id: string) {
     return this.prisma.favorite.delete({ where: { id } });
+  }
+
+  async findUsersLiked(id: string) {
+    const product: Product = await this.prisma.product.findUnique({
+      where: { id },
+    });
+
+    return this.prisma.favorite.findMany({
+      where: { productName: product.name },
+      select: {
+        productName: true,
+      },
+    });
   }
 }
