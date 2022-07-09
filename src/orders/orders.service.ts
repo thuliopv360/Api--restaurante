@@ -1,15 +1,14 @@
-import { Prisma } from '@prisma/client';
-import { PrismaService } from './../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
 export class OrdersService {
   constructor(private readonly prisma: PrismaService) {}
+
   create(dto: CreateOrderDto) {
-    const productsIds = dto.products.map((element) => {
-      return { id: element };
-    });
+    console.log(dto);
     const data: Prisma.OrderCreateInput = {
       table: {
         connect: {
@@ -22,7 +21,12 @@ export class OrdersService {
         },
       },
       products: {
-        connect: productsIds,
+        createMany: {
+          data: dto.products.map((element) => ({
+            productId: element.productId,
+            quantity: element.quantity,
+          })),
+        },
       },
     };
 
@@ -30,12 +34,24 @@ export class OrdersService {
       data,
       select: {
         id: true,
-        createdAt: true,
-        tableNumber: true,
-        userId: true,
-        products: {
+        table: {
+          select: {
+            number: true,
+          },
+        },
+        user: {
           select: {
             name: true,
+          },
+        },
+        products: {
+          select: {
+            quantity: true,
+            product: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },
@@ -46,12 +62,24 @@ export class OrdersService {
     return this.prisma.order.findMany({
       select: {
         id: true,
-        createdAt: true,
-        tableNumber: true,
-        userId: true,
-        products: {
+        table: {
+          select: {
+            number: true,
+          },
+        },
+        user: {
           select: {
             name: true,
+          },
+        },
+        products: {
+          select: {
+            quantity: true,
+            product: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },
@@ -63,12 +91,24 @@ export class OrdersService {
       where: { id },
       select: {
         id: true,
-        createdAt: true,
-        tableNumber: true,
-        userId: true,
-        products: {
+        table: {
+          select: {
+            number: true,
+          },
+        },
+        user: {
           select: {
             name: true,
+          },
+        },
+        products: {
+          select: {
+            quantity: true,
+            product: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },

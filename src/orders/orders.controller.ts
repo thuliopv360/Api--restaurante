@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -10,7 +10,7 @@ export class OrdersController {
 
   @Post()
   @ApiOperation({
-    summary: 'Criar todos os pedidos',
+    summary: 'Criar um novo pedido',
   })
   create(@Body() dto: CreateOrderDto) {
     return this.ordersService.create(dto);
@@ -18,16 +18,16 @@ export class OrdersController {
 
   @Get()
   @ApiOperation({
-    summary: 'Ler todos os pedidos',
+    summary: 'Listar todos os pedidos',
   })
   findAll() {
     return this.ordersService.findAll();
   }
 
-  @ApiOperation({
-    summary: 'Ler um pedido',
-  })
   @Get(':id')
+  @ApiOperation({
+    summary: 'Listar pedido por id',
+  })
   findOne(@Param('id') id: string) {
     return this.ordersService.findOne(id);
   }
