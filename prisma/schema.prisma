@@ -27,6 +27,8 @@ model User {
 
   favorites Favorite[] // relacionameto de muitos para muitos
 
+  orders Order[]
+
   @@map("user")
 }
 
@@ -45,6 +47,8 @@ model Product {
 
   favorites Favorite[] // relacionameto de muitos para muitos
 
+  orders OrderToProduct[]
+
   @@map("products")
 }
 
@@ -54,11 +58,13 @@ model Table {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  orders Order[]
+
   @@map("table")
 }
 
 model Category {
-  id String @id @default(uuid())
+  id   String @id @default(uuid())
   name String @unique
 
   products Product[] // relacionamento um para muitos
@@ -67,15 +73,46 @@ model Category {
 }
 
 model Favorite {
-  id String @id @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
 
-  product Product @relation(fields: [productName], references: [name], onDelete: Cascade)
-  productName String @map("product_name")
+  product     Product @relation(fields: [productName], references: [name], onDelete: Cascade)
+  productName String  @map("product_name")
 
-  @@map("favorite")
   @@unique([userId, productName])
+  @@map("favorite")
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  table       Table? @relation(fields: [tableNumber], references: [number], onDelete: SetNull)
+  tableNumber Int?   @map("table_number")
+
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? @map("user_id")
+
+  products OrderToProduct[]
+
+  @@map("order")
+}
+
+model OrderToProduct {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productId String? @map("product_id")
+
+  order Order? @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  orderId String? @map("order_id")
+
+  quantity Int
+
+  @@map("order_to_product")
 }
