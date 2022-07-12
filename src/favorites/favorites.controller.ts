@@ -7,12 +7,16 @@ import {
   HttpStatus,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FavoriteProductDto } from './dto/favorite-product.dto';
 import { Favorite } from './entities/favorite.entity';
 import { FavoritesService } from './favorites.service';
 
+@UseGuards(AuthGuard())
+@ApiBearerAuth()
 @ApiTags('favorites')
 @Controller('favorites')
 export class FavoritesController {
