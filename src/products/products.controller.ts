@@ -1,4 +1,3 @@
-import { FavoriteProductDto } from '../favorites/dto/favorite-product.dto';
 import {
   Controller,
   Get,
@@ -43,15 +42,6 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
-  @Get(':id/users-liked')
-  @ApiOperation({
-    summary:
-      'Trazer a lista de usuarios que tem o produto do id enviado como favorito',
-  })
-  findUsersLiked(@Param('id') id: string) {
-    return this.productsService.findUsersLiked(id);
-  }
-
   @Patch(':id')
   @ApiOperation({
     summary: 'Alteracao de um produto',
@@ -66,21 +56,5 @@ export class ProductsController {
   })
   remove(@Param('id') id: string) {
     return this.productsService.remove(id);
-  }
-
-  @Post('favorite')
-  @ApiOperation({
-    summary: 'Favoritar produto',
-  })
-  favorite(@Body() dto: FavoriteProductDto) {
-    return this.productsService.favorite(dto);
-  }
-
-  @Delete('favorite/:id')
-  @ApiOperation({
-    summary: 'Desfavoritar produto',
-  })
-  dislike(@Param('id') id: string) {
-    return this.productsService.dislike(id);
   }
 }

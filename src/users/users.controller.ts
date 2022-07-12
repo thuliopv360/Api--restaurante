@@ -12,7 +12,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Favorite } from 'src/favorites/entities/favorite.entity';
 
 @ApiTags('users')
 @Controller('users')
@@ -42,22 +41,6 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Get(':id/favorites')
-  @ApiOperation({
-    summary: 'Lista de favoritos de um usuario',
-  })
-  findFavoriteProducts(@Param('id') id: string): Promise<Favorite[]> {
-    return this.usersService.findFavoriteProducts(id);
-  }
-
-  @Delete(':id')
-  @ApiOperation({
-    summary: 'Deletar um usuario',
-  })
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
-  }
-
   @Patch(':id')
   @ApiOperation({
     summary: 'Atualizar um usuario',
@@ -67,5 +50,13 @@ export class UsersController {
     @Body() dto: UpdateUserDto,
   ): Promise<User | void> {
     return this.usersService.update(id, dto);
+  }
+
+  @Delete(':id')
+  @ApiOperation({
+    summary: 'Deletar um usuario',
+  })
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(id);
   }
 }

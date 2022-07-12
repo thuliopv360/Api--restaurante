@@ -76,14 +76,6 @@ export class UsersService {
     return this.verifyIdAndReturnUser(id);
   }
 
-  async findFavoriteProducts(id: string): Promise<Favorite[]> {
-    await this.verifyIdAndReturnUser(id);
-
-    return this.prisma.favorite.findMany({
-      where: { userId: id },
-    });
-  }
-
   async update(id: string, dto: UpdateUserDto): Promise<User | void> {
     await this.verifyIdAndReturnUser(id);
 
