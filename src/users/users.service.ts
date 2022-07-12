@@ -5,7 +5,6 @@ import { CreateUserDto } from './dto/create-users.dto';
 import { User } from './entity/users.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { Favorite } from 'src/favorites/entities/favorite.entity';
 
 @Injectable()
 export class UsersService {
