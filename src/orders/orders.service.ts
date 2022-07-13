@@ -8,7 +8,6 @@ export class OrdersService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(dto: CreateOrderDto) {
-    console.log(dto);
     const data: Prisma.OrderCreateInput = {
       table: {
         connect: {

@@ -16,8 +16,8 @@ import { Favorite } from './entities/favorite.entity';
 import { FavoritesService } from './favorites.service';
 
 @UseGuards(AuthGuard())
-@ApiBearerAuth()
 @ApiTags('favorites')
+@ApiBearerAuth()
 @Controller('favorites')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
