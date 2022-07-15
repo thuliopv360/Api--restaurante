@@ -1,3 +1,4 @@
+import { handleErrorConstraintUnique } from './../utils/handle-error-unique.util';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -7,8 +8,11 @@ import { Category } from './entities/category.entity';
 @Injectable()
 export class CategoriesService {
   constructor(private readonly prisma: PrismaService) {}
-  create(dto: CreateCategoryDto) {
-    return this.prisma.category.create({ data: dto });
+
+  async create(dto: CreateCategoryDto): Promise<Category> {
+    return this.prisma.category
+      .create({ data: dto })
+      .catch(handleErrorConstraintUnique);
   }
 
   findAll(): Promise<Category[]> {

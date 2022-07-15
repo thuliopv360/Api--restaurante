@@ -26,7 +26,7 @@ export class CategoriesController {
     summary: 'Criar uma categoria',
   })
   @Post()
-  create(@Body() dto: CreateCategoryDto) {
+  create(@Body() dto: CreateCategoryDto): Promise<Category> {
     return this.categoriesService.create(dto);
   }
 
