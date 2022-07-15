@@ -10,8 +10,10 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('users')
 @Controller('users')
@@ -25,10 +27,13 @@ export class UsersController {
   create(@Body() dto: CreateUserDto): Promise<User | void> {
     return this.usersService.create(dto);
   }
+
   @Get()
+  @UseGuards(AuthGuard())
   @ApiOperation({
     summary: 'Lista todos os usuários',
   })
+  @ApiBearerAuth()
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
