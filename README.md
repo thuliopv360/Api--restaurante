@@ -16,19 +16,16 @@
 > Clone esse projeto em seu computador com o (Chave SSH necessaria):
 
 ```bash
-#!/bin/bash
 $ git clone git@github.com/thuliopv360/Api--restaurante.git
 ```
 Acesse a pagina do projeto:
 
 ```bash
-#!/bin/bash
 $ cd api-restaurante
 ```
 Instale as dependências com o seguinte comando
 
 ```bash
-#!/bin/bash
 $ npm install
 ```
 ## Execução
@@ -36,7 +33,6 @@ $ npm install
 Apos ter instalado as dependencias, use o seguinte comando para rodar o projeto em um servidor local:
 
 ```bash
-#!/bin/bash
 $ npm run start:dev
 ```
 
