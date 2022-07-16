@@ -39,7 +39,7 @@ export class CategoriesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<Category> {
     return this.categoriesService.findOne(id);
   }
 
