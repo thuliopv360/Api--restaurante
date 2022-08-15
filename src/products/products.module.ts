@@ -2,9 +2,10 @@ import { PrismaModule } from './../prisma/prisma.module';
 import { Module } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, PassportModule.register({ default: 'jwt' })],
   controllers: [ProductsController],
   providers: [ProductsService],
 })
