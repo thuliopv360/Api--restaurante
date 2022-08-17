@@ -5,7 +5,7 @@ import { ProductsController } from './products.controller';
 import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [PrismaModule, PassportModule.register({ default: 'jwt' })],
+  imports: [PrismaModule, PassportModule.register({ defaultStrategy: 'jwt' })],
   controllers: [ProductsController],
   providers: [ProductsService],
 })
